@@ -23,8 +23,9 @@ THE SOFTWARE.
 from django.core.urlresolvers import reverse
 
 class NavType(object):
-    name = u'I Forgot to Name this'
+    name = u'Nav name'
     view = None
+    weight = 0
     args = ()
     kwargs ={}
     options = []
