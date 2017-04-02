@@ -24,7 +24,7 @@ __all__ = ['nav_groups', 'Nav', 'NavOption']
 
 from django_nav.base import nav_groups, Nav, NavOption
 
-VERSION = (0, 6, 0, 'beta', 2)
+VERSION = (0, 6, 0, 'beta', 4)
 
 def autodiscover():
     """
@@ -32,36 +32,18 @@ def autodiscover():
     not present. This forces an import on them to register any tabs they
     may want.
     """
-    import imp
-    from django.conf import settings
-
-    for app in settings.INSTALLED_APPS:
+    from django.apps import apps
+    
+    for app in apps.get_app_configs():
         # For each app, we need to look for a tabs.py inside that app's
         # package. We can't use os.path here -- recall that modules may be
         # imported different ways (think zip files) -- so we need to get
         # the app's __path__ and look for nav.py on that path.
-
-        # Step 1: find out the app's __path__ Import errors here will (and
-        # should) bubble up, but a missing __path__ (which is legal, but weird)
-        # fails silently -- apps that do weird things with __path__ might
-        # need to roll their own cron registration.
+ 
         try:
-            app_path = __import__(app, {}, {}, [app.split('.')[-1]]).__path__
-        except AttributeError:
-            continue
-
-        # Step 2: use imp.find_module to find the app's nav.py. For some
-        # reason imp.find_module raises ImportError if the app can't be found
-        # but doesn't actually try to import the module. So skip this app if
-        # its tabs.py doesn't exist
-        try:
-            imp.find_module('nav', app_path)
+            __import__("%s.nav" % app.name)
         except ImportError:
             continue
-
-        # Step 3: import the app's tabs file. If this has errors we want them
-        # to bubble up.
-        __import__("%s.nav" % app)
 
 def get_version():
     version = '%s.%s' % (VERSION[0], VERSION[1])
