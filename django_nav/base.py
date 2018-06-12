@@ -68,7 +68,7 @@ class NavGroups(object):
         if not isinstance(nav, NavType):
             raise TypeError("You can only register a Nav not a %r" % nav)
 
-        if not self._groups.has_key(nav.nav_group):
+        if nav.nav_group not in self._groups:
             self._groups[nav.nav_group] = []
 
         if nav not in self._groups[nav.nav_group]:
