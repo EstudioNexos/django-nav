@@ -40,8 +40,8 @@ class NavType(object):
             if self.params:
                 flat_params = "?"
                 last = len(self.params)
-                for i,key in enumerate(self.params.items()):
-                    flat_params += "{}={}".format(key,self.params[key])
+                for i,param in enumerate(self.params.items()):
+                    flat_params += "{}={}".format(param[0],param[1])
                     if last < i:
                         flat_params += "&amp;"
                 return "{}{}".format(reverse(self.view, args=self.args, kwargs=self.kwargs),flat_params)
