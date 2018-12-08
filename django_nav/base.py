@@ -41,7 +41,7 @@ class NavType(object):
             if self.params:
                 query = QueryDict('', mutable=True)
                 query.update(self.params)
-                return "{}?{}".format(reverse(self.view, args=self.args, kwargs=self.kwargs),flat_params)
+                return "{}?{}".format(reverse(self.view, args=self.args, kwargs=self.kwargs),query.urlencode())
             return reverse(self.view, args=self.args, kwargs=self.kwargs)
 
         return '#'
