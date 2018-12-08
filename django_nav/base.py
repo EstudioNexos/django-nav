@@ -29,6 +29,7 @@ class NavType(object):
     args = ()
     kwargs ={}
     options = []
+    params = {}
     conditional = {'function': None, 'args': [], 'kwargs': {}}
 
     def active_if(self, url, path):
@@ -36,6 +37,14 @@ class NavType(object):
 
     def get_absolute_url(self):
         if self.view:
+            if self.params:
+                flat_params = "?"
+                last = len(self.params)
+                for i,key in enumerate(self.params.items):
+                    flat_params += "{}={}".format(key,self.params[key])
+                    if last < i:
+                        flat_params += "&amp;"
+                return "{}{}".format(reverse(self.view, args=self.args, kwargs=self.kwargs),flat_params)
             return reverse(self.view, args=self.args, kwargs=self.kwargs)
 
         return '#'
