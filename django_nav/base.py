@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from django.core.urlresolvers import reverse
+from django.http import QueryDict
 
 class NavType(object):
     name = u'Nav name'
@@ -38,13 +39,9 @@ class NavType(object):
     def get_absolute_url(self):
         if self.view:
             if self.params:
-                flat_params = "?"
-                last = len(self.params)
-                for i,param in enumerate(self.params.items()):
-                    flat_params += "{}={}".format(param[0],param[1])
-                    if last < i:
-                        flat_params += "&amp;"
-                return "{}{}".format(reverse(self.view, args=self.args, kwargs=self.kwargs),flat_params)
+                query = QueryDict('', mutable=True)
+                query.update(self.params)
+                return "{}?{}".format(reverse(self.view, args=self.args, kwargs=self.kwargs),flat_params)
             return reverse(self.view, args=self.args, kwargs=self.kwargs)
 
         return '#'
